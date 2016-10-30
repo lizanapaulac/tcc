@@ -1,0 +1,910 @@
+\documentclass[envcountsect,dvips]{beamer}
+
+%\setbeamertemplate{background canvas}[vertical shading][bottom=green!10,top=blue!20]
+
+
+\setbeamertemplate{background canvas}[vertical shading][bottom=yellow!20,top=blue!10]
+%\usetheme{Darmstadt}
+\usetheme{Warsaw}
+%\usefonttheme[onlysmall]{structurebold}
+%\usetheme{Warsaw}
+
+
+\usepackage{times}
+\usefonttheme{structurebold}
+
+\usepackage[portuges]{babel}
+
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps}
+\usepackage{amsmath,amssymb,psfrag,epsfig}
+\usepackage[latin1]{inputenc}
+\usepackage[accumulated]{beamerseminar}
+\usepackage{beamertexpower}
+
+\setbeamertemplate{theorems}[numbered]
+
+\setbeamercovered{dynamic}
+
+\newcommand{\Pal}{P(\alpha)}
+\newcommand{\Gal}{G(\alpha)}
+\newcommand{\Hal}{H(\alpha)}
+\newcommand{\Aal}{A(\alpha)}
+\newcommand{\Bal}{B(\alpha)}
+\newcommand{\Cal}{C(\alpha)}
+\newcommand{\Dal}{D(\alpha)}
+\newcommand{\Qal}{Q(\alpha)}
+\newcommand{\Xal}{X(\alpha)}
+
+\newcommand{\Kfr}{\mathcal{K}}
+\newcommand{\Ifr}{\mathcal{I}}
+\newcommand{\Afr}{\mathcal{A}}
+
+\newcommand{\Pfr}{\mathcal{P}}
+\newcommand{\Cfr}{\mathcal{C}}
+\newcommand{\Gfr}{\mathcal{G}}
+\newcommand{\Xfal}{\mathcal{X}(\alpha)}
+\newcommand{\Bfal}{\mathcal{B}(\alpha)}
+\newcommand{\Qfal}{\mathcal{Q}(\alpha)}
+\newcommand{\Hi}{{\mathcal{H}}_{\infty}}
+\newcommand{\Hd}{{\mathcal{H}}_{2}}
+\newcommand{\simplex}{\Delta_N}
+\newcommand{\naturais}{\mathbb{N}}
+\newcommand{\inteiros}{\mathbb{Z}_{+}}
+\newcommand\I{\mbox{I}}
+\newcommand\Z{0}
+\newcommand\pdef{\triangleq}
+\newcommand{\Tr}{\mbox{\sl Tr}}
+\def\reais{{\rm I\kern-.17em R}} % R de reais
+\def\Dest{{\rm I\kern-.17em D}} % D-stability
+
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\newcommand\vi{\vspace{\baselineskip}}
+
+\newcommand\Rb{\mathbb{R}}
+
+\newtheorem{teorema}{\noindent{\bf Teorema} }
+\newtheorem{lema}{\noindent{\bf Lema} }
+\newenvironment{prova}{\noindent{\bf Prova:}}{\null\hfill $\rule{1.5mm}{1.5mm}$}
+\newcommand{\implica}{\hspace*{1.0cm} {\color{red} $\leadsto$}~~}
+\newcommand{\topico}{{\color{red} $\bullet$}~~~}
+\newcommand{\titulosec}[1]{\vspace{0.5cm}\centerline{\color{azul_marinho} \LARGE\bf #1} \vfill \vfill}
+\newcommand{\bref}[1]{\mbox{(\ref{#1})}}
+\newcommand{\Lang}[1]{\operatorname{\text{\textsc{#1}}}}
+
+\pgfdeclareimage[height=0.75cm]{logo}{unicamp}
+
+%\logo{\pgfuseimage{logo}}
+
+\title[Estudo de Robustez em Sistemas Lineares por Meio de Relaxações LMIs]{Estudo de Robustez em Sistemas Lineares por Meio de Relaxações em Termos de Desigualdades Matriciais Lineares}
+\author[Oliveira \& Peres]{{\bf \large Defesa de Tese}\\Candidato: Ricardo C. L. F. Oliveira\\Orientador: Pedro L. D. Peres~~~~~~~}
+\institute[UNICAMP]{%
+  Faculdade de Engenharia Elétrica e de Computação\\
+  {\sc  Universidade Estadual de Campinas - Brasil}}
+\date{\small Campinas, 24 de Março de 2006}
+
+
+\AtBeginSection[]{\frame{\frametitle{Descrição da Apresentação}\tableofcontents[current]}}
+\setbeamertemplate{navigation symbols}{}
+\mode<beamer>
+{
+\setbeamertemplate{footline}
+{
+\leavevmode
+\hbox{
+\begin{beamercolorbox}[wd=.20\paperwidth,ht=2.5ex,dp=1.125ex,center]{author in head/foot}
+\usebeamerfont{title in head/foot}\insertshortauthor\hspace{.3cm}
+\end{beamercolorbox}%
+
+\begin{beamercolorbox}[wd=.70\paperwidth,ht=2.5ex,dp=1.125ex,center]{title in head/foot}
+\usebeamerfont{author in head/foot}\hspace{.3cm}\insertshorttitle
+\end{beamercolorbox}%
+
+\begin{beamercolorbox}[wd=.10\paperwidth,ht=2.5ex,dp=1.125ex,center]{title in head/foot}
+ \usebeamerfont{author in head/foot}\insertframenumber/\inserttotalframenumber
+\end{beamercolorbox}%
+}%
+\vskip0pt}
+}
+
+\mode<handout>{
+\setbeamertemplate{footline}{\centerline{\insertframenumber}}
+}
+
+\setbeamertemplate{headline}
+{%
+\begin{beamercolorbox}{section in head/foot}
+\vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+\end{beamercolorbox}%
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section*{Departamento de Telemática --- Tese de Doutorado}
+\part{Main Part}
+\frame{\frametitle{Descrição da Apresentação}\tableofcontents[part=1]}
+
+\section{Introdução}
+
+\frame{
+    \frametitle{Estabilidade de Sistemas Dinâmicos}
+
+    Considere o sistema linear
+    \begin{equation}
+        \dot{x}=Ax,~x\in \reais^n
+        \label{eq:00}
+    \end{equation}
+
+
+    \begin{teorema}[Lyapunov]
+    Estabilidade (Lyapunov): O sistema linear dado por \bref{eq:00} é estável (trajetórias iniciando em
+    qualquer ponto convergem para $x=0$) se e somente se
+    existir $P=P'\in \reais^{n \times n}$ tal que
+    \[
+    A'P + PA < 0;~P>0
+    \]
+    \end{teorema}
+
+    \begin{itemize}
+    \item Definindo-se um critério linear para os elementos da matriz $P$, as desigualdades $A'P + PA < 0;~P>0$
+    podem ser colocadas na forma do seguinte problema
+          otimização.
+    \end{itemize}
+
+}
+
+\frame{
+    \frametitle{Programação Semidefinida}
+
+    \begin{gather}
+    \nonumber \min_{x \in \reais^{r}} c'x \\
+    \label{C1:eq:AP}\mbox{tal que} \quad F(x) \triangleq F_0 + x_1 F_1 + x_2 F_2 + \cdots + x_r F_r > 0
+    \end{gather}
+    sendo que $c \in \reais^{r}$, $F_i=F_i' \in \reais^{q \times q},~i=1,\ldots,r$ e $x \in \reais^r$ são
+    as variáveis de decisão do problema.
+
+   \begin{itemize}
+    \item Desigualdade matricial linear - LMI
+
+    \item Existem programas computacionais especializados (algoritmos
+    convergem em tempo polinomial) na resolução de LMIs: LMI Control Toolbox
+    (MatLab), SeDuMi, etc.
+
+    \item Inúmeros problemas de controle podem ser formulados como LMIs.
+    %\item Formular um problema em termos de LMIs equivale a resolver     o problema!
+    \end{itemize}
+
+}
+
+\frame
+{
+    \frametitle{Sistemas Lineares Incertos}
+
+    Sistema linear incerto com representação politópica:
+    \begin{equation}
+    \label{eq:01}
+        \dot{x}=\Aal x,\qquad \Aal \in \Afr
+    \end{equation}
+
+    \[
+    \Afr \triangleq \left\{\Aal : \Aal= \sum_{i=1}^{N}\alpha_i A_i,~~\alpha \in \simplex\right\}
+    \]
+    \[
+    \simplex = \left\{\alpha \in \reais^N: \sum_{i=1}^{N}\alpha_i=1,~\alpha_i \geq 0,~i=1,\ldots,N \right\}
+    \]
+
+    $\simplex$ - {\em simplex unitário}.
+
+}
+
+\frame
+{
+    \frametitle{Estabilidade Robusta}
+
+    \begin{alertblock}{Questão}
+    Como decidir sobre a estabilidade robusta de $\Aal ~\forall \alpha \in \simplex$ por meio de um número
+    finito de testes (LMIs) ?
+    \end{alertblock}
+
+    \begin{teorema}[Lyapunov]
+    O sistema linear dado por \bref{eq:01} é estável  se e somente se
+    existir $\Pal=\Pal'\in \reais^{n \times n}$ tal que
+    \be
+    \Aal'\Pal + \Pal\Aal < 0;~\Pal>0,~\forall \alpha \in \simplex
+    \label{eq:02}
+    \ee
+    \end{teorema}
+
+    %\begin{itemize}
+    %\item As desigualdades em \bref{eq:02} são LMIs dependentes de parâmetros.
+    %\end{itemize}
+
+}
+
+\frame
+{
+    \frametitle{LMIs dependentes de parâmetros}
+
+
+    %\begin{itemize}
+    %\item As desigualdades em \bref{eq:02} são LMIs dependentes de parâmetros.
+    %\end{itemize}
+    \begin{block}{Comentários}
+
+    \begin{itemize}
+    \item $\Pal$ não possui uma estrutura particular.
+
+    \item Infinitos números de testes.
+
+    \item LMIs dependentes de parâmetros.
+
+    \item Saída: Arbitrar uma estrutura para $\Pal$, ao preço de um possível conservadorismo
+    na solução.
+
+    %\item Estabilidade quadrática, funções de Lyapunov com dependência afim nos parâmetros
+
+    \end{itemize}
+    \end{block}
+
+}
+
+\frame
+{
+    \frametitle{Resultados da Literatura}
+
+    \begin{block}{Resultados Anteriores}
+
+    \begin{itemize}
+    \item Estabilidade quadrática ($\Pal=P$) $\rightarrow$ simples mas conservadora.
+
+    \item Funções de Lyapunov com dependência afim nos parâmetros ($\Pal = \sum \alpha_i P_i$)
+          $\rightarrow$ [FAG96], [GdOH98], [RP01] (ainda) conservadoras.
+
+    \item Funções de Lyapunov com dependência polinomial nos parâmetros $\rightarrow$ resultados não
+    conservadores.
+
+    \end{itemize}
+    \end{block}
+
+    \begin{alertblock}{Objetivo}
+    O objetivo desta tese é apresentar uma metodologia sistemática para encontrar
+           soluções de LMIs dependentes de parâmetros que pertencem ao simplex unitário.
+    \end{alertblock}
+
+
+}
+
+\section{Resultados}
+
+\frame
+{
+    \frametitle{Funções de Lyapunov lineares}
+
+    Considere a a função de Lyapunov $v(x)=x'\Pal x$ com
+    \[
+    \Pal=\sum_{i=1}^N \alpha_i P_i,\qquad \alpha \in \simplex
+    \]
+    Aplicando as definições de $\Aal$  e $\Pal$, tem-se
+    \begin{multline}
+    \Aal'\Pal + \Pal\Aal= \sum_{i=1}^N \alpha_i^2(\underbrace{A_i'P_i + P_iA_i}_{T_i}) + \\
+    \sum_{i=1}^{N-1} \sum_{j=i+1}^N \alpha_i\alpha_j(\underbrace{A_i'P_j + P_jA_i + A_j'P_i + P_iA_j}_{T_{ij}})
+    \label{eq:03}
+    \end{multline}
+    Condição suficiente: $P_i>0$, $T_i<0$ e $T_{ij}<0$.
+}
+
+\frame
+{
+    \frametitle{Suficiência $\rightarrow$ Necessidade ?}
+
+    \begin{alertblock}{Questão}
+    A partir de \bref{eq:03}, é possível obter condições que também sejam necessárias?
+    \end{alertblock}
+
+    \begin{teorema}[Pólya]
+    Seja $F(\alpha) \triangleq F(\alpha_1,\alpha_2,\ldots,\alpha_N)$ um polinômio homogêneo real que é positivo
+    $\forall \alpha \in \simplex$. Então para um $d \in \inteiros$ suficientemente grande, o produto
+    \[
+    (\alpha_1+\alpha_2+\ldots+\alpha_N)^d F(\alpha)
+    \]
+    tem todos os seus coeficientes estritamente positivos.
+    \end{teorema}
+
+
+}
+
+\frame
+{
+    \frametitle{Resultado}
+
+
+    \begin{teorema}[Oliveira \& Peres, LAA (2005)]
+    \label{OP:05c}
+    Uma matriz de Lyapunov com dependência afim nos parâmetros garante a estabilidade robusta de
+    $\Afr$ se e somente se existirem matrizes simétricas definidas positivas $P_i,~i=1,\ldots,N$ e um $d$ suficientemente
+    grande tais que os coeficientes do polinômio homogêneo
+    \[
+    (\alpha_1+\ldots+\alpha_N)^d \bigl(\Aal'\Pal + \Pal \Aal \bigr)
+    \]
+    sejam todos definidos negativos.
+    \end{teorema}
+
+
+}
+
+\frame
+{
+  \frametitle{Estudo de caso $N=2$}
+
+    Considere as condições do Teorema~\ref{OP:05c} aplicadas
+    a um politopo $\mathcal{A}$ de $N=2$ vértices:
+    \[
+    T_{H_1} = A_1'P_1 + P_1 A_1 ; \qquad
+    T_{H_2}  = A_2'P_2 + P_2 A_2
+    \]
+    \[
+    T_{H_{12}} =
+    A_1'P_2 + P_2 A_1+ A_2'P_1 + P_1 A_2
+    \]
+
+    \implica Para $d=0$, as LMIs
+    \be
+    T_{H_1} < 0 ; \qquad T_{H_2} < 0
+    \label{th1th2}
+    \ee
+    que são condições necessárias e
+    \be
+    T_{H_{12}} < 0
+    \label{th12}
+    \ee
+
+    \implica Para $d=1$, as LMIs são \bref{th1th2} e
+    \be
+    T_{H_1} +T_{H_{12}} < 0 ; \qquad
+    T_{H_2} + T_{H_{12}} < 0
+    \label{td1}
+    \ee
+}
+
+\frame
+{
+    \frametitle{Funções de Lyapunov Polinomiais}
+
+
+    De acordo com [Bli04], LMIs dependentes de parâmetros escalares podem necessitar
+    de soluções polinomiais nos parâmetros.
+
+    \begin{block}{Proposta}
+    Usar funções de Lyapunov polinomiais homogêneas nos parâmetros
+    \be
+    P_g(\alpha) = \sum_{j=1}^{J(g)}
+    \alpha_1^{k_1}\alpha_2^{k_2}\cdots
+    \alpha_N^{k_N}
+    P_{\Kfr_j (g)} ~ ; \quad
+    k_1k_2\cdots k_N = \Kfr_{j} (g)
+    \label{eq:12}
+    \ee
+    \end{block}
+
+}
+
+\frame
+{
+    \frametitle{Resultado}
+
+    \begin{teorema}[Oliveira \& Peres, SCL (2006)]
+    \label{OP:06a}
+    Se existir uma matriz de Lyapunov polinomial homogênea de grau arbitrário nos parâmetros
+    $P_g(\alpha)>0$ tal que
+    \be
+    \Aal'P_g(\alpha) + P_g(\alpha) \Aal<0
+    \label{eq:scl}
+    \ee
+    então o politopo $\Afr$ é estável.
+    \end{teorema}
+    \begin{itemize}
+    \item A parametrização para \bref{eq:scl} pode ser encontrada na tese.
+    \item Os resultados mostram que o conservadorismo das condições diminui
+    à medida que o grau da função de Lyapunov aumenta.
+    \end{itemize}
+
+
+}
+
+\frame
+{
+    \frametitle{Estudo de Caso}
+
+    Estudo de caso $N=2$, $g=1$ versus $g=2$.
+
+    \begin{minipage}{0.49\linewidth}
+    \[\Pal = \alpha_1P_1 + \alpha_2 P_2\]
+    \end{minipage}
+    \begin{minipage}{0.49\linewidth}
+    \begin{gather*}
+    A_1'P_1 + P_1 A_1 < 0\\
+    A_2'P_2 + P_2 A_2 < 0\\
+    A_1'P_2 + P_2 A_1 + A_2'P_1 + P_1 A_2 < 0
+    \end{gather*}
+    \end{minipage}
+
+    \begin{minipage}{0.49\linewidth}
+    \begin{gather*}
+    \Pal = \alpha_1^2P_{20} + \alpha_1\alpha_2 P_{11} \\ +  \alpha_2^2 P_{02}
+    \end{gather*}
+    \end{minipage}
+    \begin{minipage}{0.49\linewidth}
+    \begin{gather*}
+    A_{1}P_{20} + P_{20}A_{1}<0\\
+    A_{2}P_{02} + P_{02}A_{2}<0\\
+    A_{1}P_{02} + A_{2}P_{11}+P_{02}A_{1}+P_{11}A_{2} < 0\\
+    A_{1}P_{11} + A_{2}P_{20}+P_{11}A_{1}+P_{20}A_{2}<0
+    \end{gather*}
+    \end{minipage}
+
+}
+
+\frame
+{
+    \frametitle{Funções Polinomiais \& Pólya}
+
+    \begin{teorema}
+    \label{OP:05f}
+    Uma função de Lyapunov polinomial homogênea de grau arbitrário nos parâmetros
+    $P_g(\alpha)$ garante a estabilidade de $\Afr$ se e somente se existir um $d$ suficientemente
+    grande tal que
+    \begin{gather*}
+    (\alpha_1+\ldots+\alpha_N)^d P_g(\alpha)>0;\\
+    (\alpha_1+\ldots+\alpha_N)^d(\Aal'P_g(\alpha) + P_g(\alpha) \Aal)<0;
+    %\label{eq:ieee}
+    \end{gather*}
+    \end{teorema}
+    \begin{itemize}
+    \item %A condição fornece dois graus de liberdade para controlar o compromisso
+    %entre resultados precisos e o esforço computacional.
+    $g$ e $d$.
+    \item Não há perda de generalidade quando se consideram funções de Lyapunov polinomiais homogêneas ao invés
+    de funções polinomiais gerais.
+    \item Fato interessante: Com o resultado do Teorema~\ref{OP:05f} é possível provar a convergência assintótica
+    do Teorema~\ref{OP:06a}.
+    \end{itemize}
+
+
+}
+
+\frame
+{
+    \frametitle{Aplicações Imediatas}
+
+    A flexibilidade da metodologia permite tratar outras LMIs dependentes de parâmetros.
+
+    \begin{teorema}[Condição de estabilidade estendida]
+    \label{OP:05f_fins}
+    Uma função de Lyapunov polinomial homogênea de grau arbitrário nos parâmetros
+    $P_g(\alpha)$ garante a estabilidade de $\Afr$ se e somente se existir um $d$ suficientemente
+    grande e uma matriz polinomial homogênea $X_g(\alpha)$ tais que
+    \begin{gather*}
+    (\alpha_1+\ldots+\alpha_N)^d P_g(\alpha)>0;\\
+    (\alpha_1+\ldots+\alpha_N)^d \bigl(Q_g(\alpha) + X_g(\alpha)\mathcal{B}(\alpha) + \mathcal{B}(\alpha)'X_g(\alpha)'\bigr)<0
+    \end{gather*}
+    com
+    \[
+    \left[\begin{array}{cc}0 & P_g(\alpha) \\ P_g(\alpha) & 0 \end{array}\right],\quad
+    \mathcal{B}(\alpha) = [\Aal~~-I]
+    \]
+    \end{teorema}
+}
+
+\frame
+{
+    \frametitle{Outras LMIs Dependentes de Parâmetros}
+
+    \begin{block}{Custos garantidos $\Hi$}
+    \begin{gather*}
+    \left[\begin{array}{ccc}\Aal'P_g(\alpha) + P_g(\alpha)\Aal & P_g(\alpha)\Bal& \Cal'\\
+            \star & -\I&\Dal' \\
+            \star & \star & -\mu\I
+            \end{array}\right]<0
+    \end{gather*}
+    \end{block}
+
+    \begin{block}{Custos garantidos $\Hd$}
+    \begin{gather*}
+    T > \Cal P_g(\alpha) \Cal'\\
+    \Aal P_g(\alpha) + P_g(\alpha)\Aal'+ \Bal\Bal'<0
+    \end{gather*}
+    \end{block}
+}
+
+\frame
+{
+    \frametitle{Outras Aplicações}
+
+
+    \begin{exampleblock}{Outras Aplicações}
+    Em geral, a metodologia proposta pode ser aplicada em qualquer LMI dependente
+    de parâmetros pertencentes ao simplex unitário. Ex.: Sistemas politópicos com atraso,
+    sistemas neutrais, positividade real, síntese de controladores dependentes de parâmetros, etc.
+    \end{exampleblock}
+
+}
+
+
+\section{Exemplos Numéricos}
+
+\frame
+{
+    \frametitle{Métodos Polinomiais}
+
+    Para o caso de estabilidade robusta, as condições propostas na tese são comparadas
+    com outros métodos da literatura que também são suficientes e assintoticamente necessários.
+
+    \begin{block}{Chesi et al. (CGTV05)}
+    Garante a estabilidade robusta por meio da existência de uma função
+        de Lyapunov polinomial homogênea. Transforma o problema na analise da positividade de uma
+        matriz de Gram (representação completa de matriz quadrada), obtendo relaxações LMIs convergentes.
+    \end{block}
+}
+
+\frame {
+    \frametitle{Métodos Polinomiais}
+
+    \begin{block}{P.-A. Bliman (Bli04)}
+    Garante a estabilidade robusta de um sistema linear com incertezas na forma afim por
+    meio da existência de uma matriz de Lyapunov polinomial geral. Usa o Lema de KYP para
+    obter condições LMIs assintoticamente necessárias. Pode ser adaptado para o caso politópico,
+    resultando na análise de $N$ sistemas afins com $N-1$ parâmetros incertos cada.
+    \end{block}
+}
+
+\frame {
+    \frametitle{Métodos Polinomiais}
+
+    \begin{block}{Henrion et al. (HAPL04)}
+    Por meio do critério de estabilidade de Hermite, o problema de estabilidade robusta pode
+    ser escrito na forma de um problema de otimização envolvendo função objetivo
+    e restrições polinomiais. O software de otimização global de polinômios
+    ``Gloptipoly'' é usado para determinar se o polinômio é positivo, e conseqüentemente, garantir
+    a estabilidade robusta. O problema de otimização é resolvido por meio de uma seqüencia
+    de condições LMIs assintoticamente convergentes (teoria de momentos, Lasserre 2001).
+    \end{block}
+}
+
+\frame
+{
+  \frametitle{Exemplo 1}
+{\noindent \bf Exemplo 1}: Este exemplo ilustra como o processo de relaxação
+evolui à medida que $d$ aumenta (Teorema~\ref{OP:05c}). Considere um sistema incerto a tempo contínuo com
+$n=3$ e $N=2$, dado por
+\begin{gather*}
+A_1=\left[\begin{array}{ccc}
+-0.1938 & 0.3961 & -0.7104 \\
+0.0374 & 0.0988 & -0.9082 \\
+0.4803 & -0.2257 & -0.4496 \\
+\end{array}\right];\\
+A_2=\left[\begin{array}{ccc}
+-0.6343 & 0.1343 & -0.9079 \\
+-0.7179 & -0.6443 & -0.2978 \\
+0.3733 & -0.4191 & 0.3495 \\
+\end{array}\right]
+\end{gather*}
+
+Com $\Pal$ afim, o
+Teorema~\ref{OP:05c} fornece uma seqüência de relaxações para $d=\{0,1,2,3,4,5\}$
+mostrada na Tabela~1.
+
+
+}
+
+\frame
+{
+  \frametitle{Tabela de convergência}
+
+{\color{blue} Tabela~1}: Evolução do máximo autovalor das LMIs
+$\ell=1, \ldots, J(d+2)$, para $d=\{0,1,2,3,4,5\}$ na
+análise de estabilidade do Exemplo~1.
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|c} \hline \hline
+ & \multicolumn{6}{c}{$\lambda_{max} (T_\ell)$} \\ \cline{2-7}
+ ${\ell}$  & $d=0$   & $d=1$   & $d=2$   & $d=3$ & $d=4$ & $d=5$ \\
+\hline \hline
+1 & -0.039  & -0.039  & -0.039  & -0.039  & -0.039  & -0.039\\
+2 & 1908.58 & 1024.06 & 273.88  & 92.67   & 27.81   & -0.03\\
+3 & -0.004  & 823.43  & 511.81  & 258.75  & 53.84   & -21.06\\
+4 &         & -0.004  & 198.02  & 222.42  & 62.54   & -64.22 \\
+5 &         &         & -0.004  & 63.65   & 41.83   & -57.69 \\
+6 &         &         &         & -0.004  & 18.48   & -15.95 \\
+7 &         &         &         &         & -0.004  & -0.19 \\
+8 &         &         &         &         &         & -0.004 \\ \hline \hline
+\end{tabular}
+\end{center}
+
+
+}
+
+\frame
+{
+    \frametitle{Evolução de $\lambda_{max}$}
+A figura abaixo
+ilustra graficamente a evolução do máximo autovalor de cada LMI.
+
+
+\begin{psfrags}
+        \psfrag{y}[c][c]{$\max \lambda_{max}(T_\ell)$}
+        \psfrag{x}[c][c]{$d$}
+        \epsfxsize=0.65\linewidth
+        \centerline{\epsffile{fig_pres_1.eps}}
+\end{psfrags}
+
+
+
+}
+
+
+\frame{
+
+    \frametitle{Exemplo~2}
+{\bf Exemplo 2:} Sistema contínuo ($n=2$, $N=4$) com vértices dados por
+\begin{gather*}
+A_1=\left[\begin{array}{cc}
+    -0.468  &  0.845  \\
+    0.272  &  -0.423  \end{array}\right]; ~
+A_2=\left[\begin{array}{cc}
+    0.825  &  0.427  \\
+    0.299  &  -0.346 \end{array}\right] \\
+A_3=\left[\begin{array}{cc}
+    -0.744  &  0.214  \\
+    1.242  &  0.545 \end{array}\right];\quad
+A_4=\left[\begin{array}{cc}
+    0.330  &  -1.140  \\
+    -0.322  &  0.309 \end{array}\right]
+\end{gather*}
+
+
+O objetivo é comparar as abordagens propostas na tese (T6 e T7) com os métodos polinomiais
+de [CGTV05] e [HAPL04]. T7 é a extensão de T6 por meio do Teorema de Finsler. A Tabela~2
+apresenta as comparações.
+
+}
+
+\frame
+{
+    \frametitle{Comparações}
+
+
+{\color{blue} Tabela~2:} Comparação dos  resultados dos Teoremas~6 e 7 com os métodos
+[CGTV05] e [HAPL04] em termos do esforço computacional. $K$ é o número de variáveis escalares
+e $L$ é o número de linhas de LMIs.
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+Método & $K$ & $L$ & Tempo MatLab  & Tempo SeDuMi \\ \hline \hline
+\null [HAPL04]$_{k=4}$  & $494$ & $385$  & --       & $9.76~s$  \\
+\null [CGTV05]$_{m=1}$  & $586$ & $48$   & $>60~s$  & $4.11~s$  \\ \hline
+T6$_{g=1,d=3}$          & $12$  & $232$  & $2.73~s$ & $0.25~s$\\
+T6$_{g=2,d=2}$          & $30$  & $294$  & $5.20~s$ & $0.32~s$\\
+T6$_{g=3,d=0}$          & $60$  & $180$  & $0.31~s$ & $0.21~s$\\ \hline
+T7$_{g=1,d=0}$          & $44$  & $48$   & $0.09~s$ & $0.10~s$\\
+\end{tabular}
+\end{center}
+
+
+}
+
+\frame
+{
+    \frametitle{Exemplo~3}
+
+    {\bf Exemplo 3:} Sistema contínuo de dimensão ($n=3$, $N=4$) com vértices dados por
+
+{\small
+    \begin{gather*}
+    A_1=\left[\begin{array}{ccc}
+    -0.78  &  -0.53  &  0.35  \\
+    -0.46  &  -0.39  &  0.67  \\
+    -0.97  &  -0.91  &  0.05 \end{array}\right]
+    A_2=\left[\begin{array}{ccc}
+    -1.09  &  -0.34  &  0.49  \\
+    0.49  &  -0.77  &  0.22  \\
+    -0.11  &  0.64  &  -0.49 \end{array}\right]\\
+    A_3=\left[\begin{array}{ccc}
+    -0.41  &  0.89  &  -0.85  \\
+    -0.19  &  -0.41  &  0.59  \\
+    0.57  &  0.11  &  -0.97 \end{array}\right]
+    A_4=\left[\begin{array}{ccc}
+    -0.64  &  -0.87  &  -0.99  \\
+    -0.73  &  -0.99  &  -0.12  \\
+    0.70  &  0.28  &  0.01 \end{array}\right]
+\end{gather*}}
+
+}
+
+\frame
+{
+    \frametitle{Comparações}
+
+
+    {\color{blue} Tabela~3}: Comparação numérica para o Exemplo 3.
+    \begin{center}
+\begin{tabular}{c|c|c|c|c}
+Método & $K$ & $L$ & Tempo MatLab  & Tempo SeDumi \\ \hline \hline
+\null [CGTV05]$_{m=2}$ & $414$ & $48$   & $> 600~s$  & $78.9~s$ \\
+\null [HAPL04]$_{k=4}$  & $494$ & $385$  & --        & $19.07~s$  \\ \hline
+T6$_{g=2,d=3}$          & $60$  & $420$  & $5.82~s$  & $0.99~s$\\
+T6$_{g=3,d=1}$          & $120$ & $273$  & $2.01~s$  & $0.50~s$\\
+T6$_{g=4,d=0}$          & $210$ & $273$  & $1.35~s$  & $0.65~s$\\ \hline
+T7$_{g=2,d=0}$          & $240$ & $150$  & $3.99~s$  & $0.61~s $\\
+\end{tabular}
+\end{center}
+
+}
+
+\frame
+{
+    \frametitle{Exemplo~4: Normas $\Hd$ e $\Hi$}
+Considere uma sistema discreto SISO com
+$n=2$ estados e $N=2$ vértices dados por
+\[
+A_1=\left[\begin{array}{cc}
+    -0.05  &  0.97  \\
+    -1.00  &  0.01 \end{array}\right];\quad
+A_2=\left[\begin{array}{cc}
+    -1.68  &  -1.44  \\
+    0.94  &  0.22 \end{array}\right]
+\]
+\[
+B_i=\left[\begin{array}{cc}
+    1  &  0 \end{array}\right]';~
+C_i=\left[\begin{array}{cc}
+    0  &  1 \end{array}\right];~D_i=0;~i=1,2
+\]
+Os métodos da literatura baseados em funções de Lyapunov com dependência
+afim nos parâmetros não são capazes de detectar a estabilidade robusta do sistema.
+Os resultados fornecidos pelas condições propostas são apresentados na Tabela~4
+}
+
+\frame
+{
+    \frametitle{Exemplo~4}
+
+    {\color{blue} Tabela~4}: Custos garantidos para o sistema incerto a tempo discreto do Exemplo~1,
+computados usando-se os métodos propostos na tese para $(A_i,B_i,C_i)$ (primal - P)
+e $(A_i',C_i',B_i')$ (dual - D). A norma $\Hi$ de pior caso é
+$\| H \|_{\infty p.c.} = 86.77$ e a norma $\Hd$ de pior caso é
+$\| H \|_{2 p.c.} = 7.79$. O símbolo `--' significa que nenhuma solução factível foi encontrada.
+\begin{center}
+\begin{tabular}{ccc|ccc} \hline \hline
+\multicolumn{3}{c|}{$\Hi$} &  \multicolumn{3}{|c}{$\Hd$}\\ \hline \hline
+Método & (P) & (D) & Método & (P) & (D)\\
+T4.2$_{g<7}$ & --     & --     & (T4.4,T4.6)$_{g<7}$ & -- & -- \\
+T4.2$_{g=7}$ & 134.36 & 302.35 & (T4.4,T4.6)$_{g=7}$ & 24.78 & 73.40 \\
+T4.2$_{g=8}$ & 86.79  & 103.59 & (T4.4,T4.6)$_{g=8}$ & 8.96  & 29.33 \\
+T4.2$_{g=9}$ & 86.77  & 86.77  & (T4.4,T4.6)$_{g=9}$ & 7.79  & 17.15 \\ \hline
+T4.3$_{g=1}$ & --     & --     & (T4.5,T4.8)$_{g=1}$ & --     & -- \\
+T4.3$_{g=2}$ & 86.77  & 86.77  & (T4.5,T4.8)$_{g=2}$ & 7.79 & 7.79 \\ \hline \hline
+\end{tabular}
+\end{center}
+
+
+}
+
+
+\frame
+{
+    \frametitle{Exemplo~5: Norma $\Hi$}
+Considere o sistema politópico a tempo contínuo apresentado em [CGTV05c](Exemplo~2).
+As dimensões do sistemas são $n=4$, $N=3$ e os vértices são dados por
+\[
+A_1=\left[\begin{array}{cccc}
+    -0.42  &  -1.68  &  -2.24  &  2.92  \\
+    -0.74  &  -1.74  &  -4.58  &  1.44  \\
+    -2.92  &  3.84  &  -6.98  &  2.00  \\
+    -4.92  &  -2.68  &  -8.66  &  -0.78 \end{array}\right]
+\]
+\[
+A_2=\left[\begin{array}{cccc}
+    -0.78  &  5.52  &  1.36  &  5.80  \\
+    -5.42  &  -4.62  &  -0.26  &  -1.08  \\
+    2.48  &  6.00  &  -7.70  &  -7.72  \\
+    -1.32  &  3.80  &  2.14  &  2.10 \end{array}\right]
+\]
+}
+
+\frame
+{
+    \frametitle{Exemplo~5: Norma $\Hi$}
+\[
+A_3=\left[\begin{array}{cccc}
+    -4.20  &  -3.12  &  -2.96  &  1.84  \\
+    4.48  &  -1.02  &  -2.78  &  -7.38  \\
+    1.22  &  -0.12  &  -2.66  &  -0.34  \\
+    2.10  &  4.52  &  -1.28  &  -1.50 \end{array}\right]
+\]
+
+\[
+B_i=\left[\begin{array}{cccc}
+    1  &  0 & 0 & 0\end{array}\right]';~
+C_i=\left[\begin{array}{cccc}
+    0 & 0 & 0  &  1 \end{array}\right];~D_i=0;~i=1,3
+\]
+Os resultados são apresentados na Tabela~5.
+}
+
+\frame
+{
+    \frametitle{Exemplo~5: Norma $\Hi$}
+    {\color{blue} Tabela~5}: Comparação dos condições propostas com o método de [CGTV05c].
+    A norma $\Hi$ de pior caso é $\| H \|_{\infty p.c.} = 1.215$.
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+Método & $K$ & $L$ &  $\gamma^*$ & Tempo (Sedumi)\\ \hline \hline
+     [CGTV05c]$_{m=2}$ & $1066$ & $74$   &  $1.215$ &  -- \\
+     T5.5$_{g=2,d=0}$ & $361$ & $124$  &  $1.405$ &  $2.28~s$\\
+     T5.5$_{g=2,d=1}$ & $361$ & $190$  &  $1.271$ &  $3.30~s$\\
+     T5.5$_{g=2,d=2}$ & $361$ & $270$  &  $1.246$ &  $4.72~s$\\
+     T5.5$_{g=2,d=3}$ & $361$ & $364$  &  $1.231$ &  $7.04~s$\\
+     T5.5$_{g=2,d=4}$ & $361$ & $472$  &  $1.221$ &  $9.96~s$\\
+     T5.5$_{g=2,d=5}$ & $361$ & $594$  &  $1.215$ &  $11.38~s$\\
+     T5.5$_{g=3,d=0}$ & $601$ & $190$  &  $1.215$ &  $9.79~s$\\
+\end{tabular}
+\end{center}
+
+
+}
+
+\section{Conclusões}
+
+\frame
+{
+
+    \begin{exampleblock}{Concluindo}
+        \begin{enumerate}
+            \item<1-| alert@1>
+                Relaxações LMI assintoticamente exatas foram apresentadas para encontrar soluções de
+                LMIs dependentes de parâmetros ligadas à análise robusta de sistemas lineares com incertezas politópicas.
+            \item<2-| alert@2>
+                As relaxações exploram funções de Lyapunov com dependência polinomial homogênea nos parâmetros.
+            \item<3-| alert@3>
+                O Teorema de Pólya é usado para garantir a convergência das condições propostas.
+            \item<4-| alert@4>
+                Os métodos propostos apresentam bons resultados quando comparados com os outros métodos da literatura.
+            \item<5-| alert@5>
+                Outros problemas de análise e controle escalonado podem ser abordados de maneira similar.
+    \end{enumerate}
+  \end{exampleblock}
+
+}
+
+\frame
+{
+    \frametitle{Perspectivas}
+    \begin{exampleblock}{Perspectivas}
+        \begin{enumerate}
+            \item<1-| alert@1>
+                Estrutura dos multiplicadores nas condições estendidas (Finsler).
+            \item<2-| alert@2>
+                Sistemas com parâmetros variantes no tempo.
+            \item<3-| alert@3>
+                Obtenção de novas LMIs dependentes de parâmetros que apresentem propriedades numéricas favoráveis (Finsler).
+    \end{enumerate}
+  \end{exampleblock}
+
+}
+
+\frame
+{
+    \frametitle{Agradecimentos}
+    \begin{exampleblock}{Agradecimentos}
+        \begin{enumerate}
+            \item Prof. Pedro Peres
+            \item Colegas do Departamento
+            \item FAPESP
+    \end{enumerate}
+  \end{exampleblock}
+
+}
+
+
+\end{document}

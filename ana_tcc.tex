@@ -1,0 +1,88 @@
+\documentclass[12pt,oneside,final]{book}
+
+\usepackage[portuges,brazil]{babel}
+\usepackage[latin1]{inputenc}
+
+\usepackage{indentfirst}
+\usepackage{ae}
+\usepackage{harvard}
+\usepackage{amssymb,fancyhdr,fancybox,epsfig,psfrag,amsmath,tabularx}
+\usepackage[paperwidth=8.5in,paperheight=11in,hmargin={25mm,20mm},vmargin={20mm,20mm}]{geometry} %tamanho letter
+\usepackage{changepage}
+
+\renewcommand*{\harvardand}{e}
+
+\usepackage[color]{showkeys}
+\definecolor{refkey}{rgb}{0.39,0.58,1}
+\definecolor{labeled}{rgb}{1,0,0}
+\usepackage[Lenny]{fncychap}
+\setlength{\headheight}{15pt}
+
+%=========================================== Headers =========================================
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter. \ #1}{ }}
+\renewcommand{\sectionmark}[1]{\markright{\thesection. \ #1}}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[LO]{\nouppercase{\leftmark}}
+\fancyhead[RO]{\thepage}
+
+\input{macros}
+
+\begin{document}
+
+\pagenumbering{roman}
+\pagestyle{plain}
+
+%Tese em português
+\input{capa}
+%Tese em português e inglês
+%\input{capaPortIngles}
+
+
+\input{dedicatoria}
+
+\input{agradecimento}
+
+\input{epigrafe}
+
+
+\baselineskip 1.1 \baselineskip
+
+\input{res_abstract}
+
+
+%=============================== lista de tabelas e figuras ==========================
+\listoffigures
+
+\listoftables
+
+%============================ acrônimos, símbolos e notações ========================
+\input{acro_notacao.tex}
+
+%=============================== sumário =============================================
+\tableofcontents
+
+
+\pagestyle{fancy}
+
+\markboth{Introdu\c{c}\~{a}o}{Introdu\c{c}\~{a}o}
+\include{introducao}
+
+\include{cap1}
+\include{cap2}
+\include{cap3}
+
+
+\include{conclusao}
+
+
+%=============================== Bibliografia ===============================================
+\addcontentsline{toc}{chapter}{Bibliografia}
+\renewcommand{\bibname}{Bibliografia}
+\markboth{Bibliografia}{Bibliografia}
+
+\bibliographystyle{dcu}
+\bibliography{bibliografia}
+
+
+\end{document}
